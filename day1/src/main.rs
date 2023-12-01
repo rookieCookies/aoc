@@ -1,46 +1,29 @@
-const DATA : &str = include_str!("../data.txt");
 
-
-fn main() {
-    {
-        let timer = std::time::Instant::now();
-
-        solve_part_one();
-
-        let end = timer.elapsed();
-
-        println!("Part 1 solved in {}μs", end.as_micros());
-    }
-
-    {
-        let timer = std::time::Instant::now();
-
-        solve_part_two();
-
-        let end = timer.elapsed();
-
-        println!("Part 2 solved in {}μs", end.as_micros());
-    }
-}
-
-
-fn solve_part_one() {
+fn solve_part_one() -> u32 {
     let mut result = 0;
 
-    let to_digit = |ch: char| -> Option<u32> { ch.to_digit(10) };
+    let to_digit = |str: &str, iter: &mut dyn Iterator<Item=usize>| -> u32 {
+        let buff = str.as_bytes();
+        loop {
+            let i = iter.next().unwrap();
+            if let Some(val) = (buff[i] as char).to_digit(10) {
+                return val
+            }
+        }
+    };
+
     for line in DATA.lines() {
-        let first = line.chars().find_map(to_digit).unwrap();
-        let last  = line.chars().rev().find_map(to_digit).unwrap();
+        let first = to_digit(line, &mut (0..line.len()));
+        let last  = to_digit(line, &mut (0..line.len()).rev());
 
         result += first * 10 + last;
     }
 
-    println!("Result is {result}");
+    result
 }
 
 
-fn solve_part_two() {
-
+fn solve_part_two() -> u32 {
     let check_buff = |buff: &[u8], str: &str| -> bool {
         buff.len() >= str.len() && &buff[0..str.len()] == str.as_bytes()
     };
@@ -78,5 +61,44 @@ fn solve_part_two() {
         result += first * 10 + last;
     }
 
-    println!("Result is {result}");
+    result
 }
+
+
+//
+// Running
+//
+const DATA : &str = include_str!("../data.txt");
+
+fn main() {
+    // Wind up time
+    for _ in 0..5 {
+        solve_part_one();
+        solve_part_two();
+    }
+
+
+    {
+        let timer = std::time::Instant::now();
+        let result = solve_part_one();
+        let end = timer.elapsed();
+
+        println!("Result is {result}");
+        println!("Part 1 solved in {}μs", end.as_micros());
+    }
+
+    
+    {
+        let timer = std::time::Instant::now();
+
+        let result = solve_part_two();
+
+        let end = timer.elapsed();
+
+        println!("Result is {result}");
+        println!("Part 2 solved in {}μs", end.as_micros());
+    }
+    
+}
+
+
