@@ -1,17 +1,26 @@
-use std::ops::Range;
-
 const DATA : &str = include_str!("../data.txt");
 
 
 fn main() {
-    let timer = std::time::Instant::now();
+    {
+        let timer = std::time::Instant::now();
 
-    solve_part_one();
+        solve_part_one();
 
-    let end = timer.elapsed();
+        let end = timer.elapsed();
 
-    println!("Solved in {}μs", end.as_micros());
+        println!("Part 1 solved in {}μs", end.as_micros());
+    }
 
+    {
+        let timer = std::time::Instant::now();
+
+        solve_part_two();
+
+        let end = timer.elapsed();
+
+        println!("Part 2 solved in {}μs", end.as_micros());
+    }
 }
 
 
